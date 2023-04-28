@@ -1,15 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
 const RegisterPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('/api/register', data);
       console.log(response.data);
+      alert('Registration successful!');
+      navigate('/login');
     } catch (error) {
       console.error(error);
     }

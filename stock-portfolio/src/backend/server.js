@@ -60,6 +60,22 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.get('/api/check-auth', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided.' });
+  }
+
+  jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token is invalid or expired.' });
+    }
+
+    res.status(200).json({ message: 'Token is valid.', userId: decoded.id });
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
