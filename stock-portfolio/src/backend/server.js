@@ -5,6 +5,7 @@ const config = require('./config');
 const User = require('./models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -75,6 +76,16 @@ app.get('/api/check-auth', (req, res) => {
     res.status(200).json({ message: 'Token is valid.', userId: decoded.id });
   });
 });
+
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, '../../build')));
+
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../build', 'index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 
