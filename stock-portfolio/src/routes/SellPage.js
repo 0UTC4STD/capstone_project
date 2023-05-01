@@ -1,12 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const SellPage = () => {
+const SellPage = ({ stocks, onSell }) => {
+  const [ticker, setTicker] = useState('');
+  const [quantity, setQuantity] = useState(1);
+
+  const handleSell = (e) => {
+    e.preventDefault();
+    onSell(ticker, quantity);
+  };
+
   return (
     <div>
-      <h1>Sell</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+      <h1>Sell Stocks</h1>
+      <h2>Current Portfolio</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Ticker</th>
+            <th>Quantity</th>
+            <th>Total Value ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stocks.map((stock, index) => (
+            <tr key={index}>
+              <td>{stock.name}</td>
+              <td>{stock.symbol}</td>
+              <td>{stock.quantity}</td>
+              <td>${stock.totalValue.toFixed(2)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <form onSubmit={handleSell}>
+        <label htmlFor="ticker">Ticker:</label>
+        <input
+          type="text"
+          id="ticker"
+          value={ticker}
+          onChange={(e) => setTicker(e.target.value)}
+        />
+        <label htmlFor="quantity">Quantity:</label>
+        <input
+          type="number"
+          id="quantity"
+          value={quantity}
+          min="1"
+          onChange={(e) => setQuantity(Number(e.target.value))}
+        />
+        <button type="submit">Sell</button>
+      </form>
     </div>
   );
 };

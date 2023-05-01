@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useStocks } from './backend/useStocks';
 import LoginPage from './routes/LoginPage';
 import RegisterPage from './routes/RegisterPage';
 import HomePage from './routes/HomePage';
@@ -22,7 +23,7 @@ const MainLayout = ({ children, handleLogout }) => {
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+  const { stocks, handleBuy, handleSell } = useStocks();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -44,9 +45,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/research" element={<ResearchPage />} />
-            <Route path="/buy" element={<BuyPage />} />
-            <Route path="/sell" element={<SellPage />} />
-            <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="/buy" element={<BuyPage onBuy={handleBuy} />} />
+            <Route path="/sell" element={<SellPage stocks={stocks} onSell={handleSell} />} />
+            <Route path="/portfolio" element={<PortfolioPage stocks={stocks} key={stocks.length} />} />
             <Route path="/logout" element={<Logout handleLogout={handleLogout} />} />
           </Routes>
         </MainLayout>
